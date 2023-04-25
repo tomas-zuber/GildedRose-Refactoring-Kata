@@ -121,6 +121,19 @@ internal class GildedRoseTest {
     }
 
     @Test
+    fun `Backstage passes increases in Quality when more than 10 days`() {
+        val items = listOf(Item(BACKSTAGE, 11, 6))
+        val app = GildedRose(items)
+
+        app.updateQuality()
+
+        val item = app.items[0]
+        assertEquals(BACKSTAGE, item.name)
+        assertEquals(10, item.sellIn)
+        assertEquals(7, item.quality)
+    }
+
+    @Test
     fun `Backstage passes increases in Quality by 2 when there are 10 days or less`() {
         val items = listOf(Item(BACKSTAGE, 10, 6))
         val app = GildedRose(items)
