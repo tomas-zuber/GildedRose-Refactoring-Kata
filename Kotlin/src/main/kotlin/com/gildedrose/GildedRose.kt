@@ -32,15 +32,19 @@ class GildedRose(var items: List<Item>) {
             increaseQuality(item)
 
             if (item.name == BACKSTAGE) {
-                if (item.sellIn <= BACKSTAGE_INCREASE1) {
-                    increaseQuality(item)
-                }
-                if (item.sellIn <= BACKSTAGE_INCREASE2) {
-                    increaseQuality(item)
-                }
+                backstageIncreaseQuality(item)
             }
         } else {
             decreaseQuality(item)
+        }
+    }
+
+    private fun backstageIncreaseQuality(item: Item) {
+        if (item.sellIn <= BACKSTAGE_INCREASE1) {
+            increaseQuality(item)
+        }
+        if (item.sellIn <= BACKSTAGE_INCREASE2) {
+            increaseQuality(item)
         }
     }
 
@@ -63,9 +67,8 @@ class GildedRose(var items: List<Item>) {
     }
 
     private fun decreaseQuality(item: Item) {
-        if (item.quality > MIN_QUALITY) {
-            item.quality -= 1
-        }
+        val change = if (item.name == CONJURED) 2 else 1
+        item.quality = maxOf(MIN_QUALITY, item.quality - change)
     }
 
     private fun increasesQualityByAging(item: Item) = item.name in listOf(AGED_BRIE, BACKSTAGE)
