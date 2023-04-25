@@ -1,8 +1,5 @@
 package com.gildedrose
 
-import kotlin.math.max
-import kotlin.math.min
-
 const val AGED_BRIE = "Aged Brie"
 const val BACKSTAGE = "Backstage passes to a TAFKAL80ETC concert"
 const val SULFURAS = "Sulfuras, Hand of Ragnaros"
@@ -24,38 +21,48 @@ class GildedRose(var items: List<Item>) {
         if (item.name == SULFURAS) {
             return
         }
-        if (!increasesQualityByAging(item)) {
-            if (item.quality > 0) {
-                item.quality = item.quality - 1
-            }
-        } else {
-            if (item.quality < MAX_QUALITY) {
-                item.quality = item.quality + 1
+        updateQuality(item)
+        updateSellIn(item)
+    }
 
-                if (item.name == BACKSTAGE) {
-                    if (item.sellIn < 11) {
-                        if (item.quality < MAX_QUALITY) {
-                            item.quality = item.quality + 1
-                        }
-                    }
-
-                    if (item.sellIn < 6) {
-                        if (item.quality < MAX_QUALITY) {
-                            item.quality = item.quality + 1
-                        }
-                    }
-                }
-            }
-        }
-
+    private fun updateSellIn(item: Item) {
         item.sellIn = item.sellIn - 1
 
         if (item.sellIn < 0) {
-            item.quality = when (item.name) {
-                AGED_BRIE -> min(MAX_QUALITY, item.quality + 1)
-                BACKSTAGE -> 0
-                else -> max(MIN_QUALITY, item.quality - 1)
+            when (item.name) {
+                AGED_BRIE -> increaseQuality(item)
+                BACKSTAGE -> item.quality = 0
+                else -> decreaseQuality(item)
             }
+        }
+    }
+
+    private fun updateQuality(item: Item) {
+        if (increasesQualityByAging(item)) {
+            increaseQuality(item)
+
+            if (item.name == BACKSTAGE) {
+                if (item.sellIn <= 10) {
+                    increaseQuality(item)
+                }
+                if (item.sellIn <= 5) {
+                    increaseQuality(item)
+                }
+            }
+        } else {
+            decreaseQuality(item)
+        }
+    }
+
+    private fun increaseQuality(item: Item) {
+        if (item.quality < MAX_QUALITY) {
+            item.quality = item.quality + 1
+        }
+    }
+
+    private fun decreaseQuality(item: Item) {
+        if (item.quality > MIN_QUALITY) {
+            item.quality = item.quality - 1
         }
     }
 
