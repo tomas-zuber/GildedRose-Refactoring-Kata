@@ -159,20 +159,30 @@ internal class GildedRoseTest {
         assertEquals(0, item.quality)
     }
 
-//    Just for clarification, an item can never have its Quality increase above 50,
-
     @Test
-    @Disabled // TODO Fix
-    fun `The Quality of an item is never more than 50`() {
-        val items = listOf(Item(FOO, 1, 60))
+    fun `The Quality of an item is never more than 50 for Aged brie`() {
+        val items = listOf(Item(AGED_BRIE, 0, 50))
         val app = GildedRose(items)
 
         app.updateQuality()
 
         val item = app.items[0]
-        assertEquals(FOO, item.name)
+        assertEquals(AGED_BRIE, item.name)
+        assertEquals(-1, item.sellIn)
+        assertEquals(50, item.quality)
+    }
+
+    @Test
+    fun `The Quality of an item is never more than 50 for Backstage`() {
+        val items = listOf(Item(AGED_BRIE, 1, 50))
+        val app = GildedRose(items)
+
+        app.updateQuality()
+
+        val item = app.items[0]
+        assertEquals(AGED_BRIE, item.name)
         assertEquals(0, item.sellIn)
-        assertEquals(60, item.quality)
+        assertEquals(50, item.quality)
     }
 }
 
