@@ -8,6 +8,8 @@ const val CONJURED = "Conjured"
 
 private const val MAX_QUALITY = 50
 private const val MIN_QUALITY = 0
+private const val BACKSTAGE_INCREASE1 = 10
+private const val BACKSTAGE_INCREASE2 = 5
 
 class GildedRose(var items: List<Item>) {
 
@@ -25,8 +27,25 @@ class GildedRose(var items: List<Item>) {
         updateSellIn(item)
     }
 
+    private fun updateQuality(item: Item) {
+        if (increasesQualityByAging(item)) {
+            increaseQuality(item)
+
+            if (item.name == BACKSTAGE) {
+                if (item.sellIn <= BACKSTAGE_INCREASE1) {
+                    increaseQuality(item)
+                }
+                if (item.sellIn <= BACKSTAGE_INCREASE2) {
+                    increaseQuality(item)
+                }
+            }
+        } else {
+            decreaseQuality(item)
+        }
+    }
+
     private fun updateSellIn(item: Item) {
-        item.sellIn = item.sellIn - 1
+        item.sellIn -= 1
 
         if (item.sellIn < 0) {
             when (item.name) {
@@ -37,32 +56,15 @@ class GildedRose(var items: List<Item>) {
         }
     }
 
-    private fun updateQuality(item: Item) {
-        if (increasesQualityByAging(item)) {
-            increaseQuality(item)
-
-            if (item.name == BACKSTAGE) {
-                if (item.sellIn <= 10) {
-                    increaseQuality(item)
-                }
-                if (item.sellIn <= 5) {
-                    increaseQuality(item)
-                }
-            }
-        } else {
-            decreaseQuality(item)
-        }
-    }
-
     private fun increaseQuality(item: Item) {
         if (item.quality < MAX_QUALITY) {
-            item.quality = item.quality + 1
+            item.quality += 1
         }
     }
 
     private fun decreaseQuality(item: Item) {
         if (item.quality > MIN_QUALITY) {
-            item.quality = item.quality - 1
+            item.quality -= 1
         }
     }
 
