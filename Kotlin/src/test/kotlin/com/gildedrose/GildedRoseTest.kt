@@ -9,9 +9,13 @@ internal class GildedRoseTest {
     fun foo() {
         val items = listOf(Item("foo", 0, 0))
         val app = GildedRose(items)
-        app.updateQuality()
-        assertEquals("fixme", app.items[0].name)
 
+        app.updateQuality()
+
+        val item = app.items[0]
+        assertEquals("foo", item.name)
+        assertEquals(-1, item.sellIn)
+        assertEquals(0, item.quality)
     }
 
 }
